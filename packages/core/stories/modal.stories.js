@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { storiesOf } from '@storybook/react';
 import withClippy from '../.storybook/src/clippy-addon/clippy-addon';
 
-import Modal from '../components/Modal';
+import { Modal } from '../components/Modal';
 import Button from '../components/Button';
 import List from '../components/List';
 
@@ -26,10 +26,12 @@ class ModalStory extends React.Component {
     const { children } = this.props;
     const { showModal } = this.state;
     return (
-      <React.Fragment>
+      <>
         <Button onClick={this.handleOpenModal}>Trigger Modal</Button>
         {showModal && (
           <Modal
+            width={300}
+            height={200}
             icon="computer"
             title="Browse"
             closeModal={this.handleCloseModal}
@@ -59,7 +61,7 @@ class ModalStory extends React.Component {
             {children}
           </Modal>
         )}
-      </React.Fragment>
+      </>
     );
   }
 }

@@ -1,11 +1,14 @@
-const path = require('path');
-
 module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|woff|woff2|eot|ttf|svg|ico|cur)$/,
+        test: /\.(png|woff|woff2|eot|ttf|svg|ico|cur|mp4)$/,
         loaders: ['file-loader'],
+      },
+
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },

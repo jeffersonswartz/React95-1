@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect, forwardRef } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { css } from '@xstyled/styled-components';
+import { th, backgroundColor } from '@xstyled/system';
 import Draggable from 'react-draggable';
+
 import Btn from '../shared-style/Btn';
 import Button from '../Button';
 import Icon from '../Icon';
+import ModalContext from './ModalContext';
 
 const ModalWrapper = styled.div`
   display: flex;
@@ -12,30 +15,41 @@ const ModalWrapper = styled.div`
 
   position: fixed;
 
-  padding: 2px 2px 8px;
-  ${({ width, height }) => `width: ${width}px; height: ${height}px;`}
+  padding: 2 2 8;
 
   top: 50px;
 
-  background-color: #c3c7cb;
+  background-color: bg;
 
-  box-shadow: inset 1px 1px 0px 1px #ffffff, inset 0 0 0 1px #868a8e,
-    1px 1px 0 1px #000;
+  box-shadow: inset 1px 1px 0px 1px ${th('colors.white')},
+    inset 0 0 0 1px ${th('colors.grays.3')}, 1px 1px 0 1px ${th('colors.black')};
+
+  ${({ width, height }) => `
+    width: ${width ? `${width}px` : 'auto'};
+    height: ${height ? `${height}px` : 'auto'};
+  `}
+  ${({ active }) =>
+    active
+      ? css`
+          z-index: modal;
+        `
+      : ''}
 `;
 
 const TitleBar = styled.div`
   height: 18px;
-  margin-bottom: 2px;
+  margin-bottom: 2;
 
-  background-color: #00007f;
-  color: white;
-  padding: 2px 2px 0;
+  color: ${th('colors.white')};
+  padding: 2 2 0;
 
   display: flex;
+  ${backgroundColor}
 `;
 
 const Title = styled.div`
   flex-grow: 1;
+  font-weight: bold;
 `;
 
 const OptionsBox = styled.ul`
@@ -47,27 +61,28 @@ const OptionsBox = styled.ul`
 `;
 
 const Option = styled(Btn)`
-  margin-right: 2px;
+  margin-right: 2;
   padding: 0;
 
   width: 17px;
   height: 14px;
   min-width: 0;
 
-  font-size: 10px;
+  font-size: 10;
 
   &:last-child {
     margin-right: 0;
   }
 
   &:active {
-    padding: 1px 0 0 1px;
+    padding: 1 0 0 1;
 
     outline: none;
   }
 
   &:focus {
-    box-shadow: inset 1px 1px 0px 1px #ffffff, inset -1px -1px 0px 1px #868a8e;
+    box-shadow: inset 1px 1px 0px 1px ${th('colors.white')},
+      inset -1px -1px 0px 1px ${th('colors.grays.3')};
   }
 `;
 
@@ -78,7 +93,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
 
-  padding: 6px;
+  padding: 6;
 `;
 
 const ButtonWrapper = styled.div`
@@ -86,10 +101,10 @@ const ButtonWrapper = styled.div`
   flex-direction: row;
   justify-content: ${props => props.buttonsAlignment};
 
-  padding: 0 6px 6px 6px;
+  padding: 0 6 6 6;
 
   & ${Btn} {
-    margin-right: 6px;
+    margin-right: 6;
     min-width: 70px;
 
     &:last-child {
@@ -105,109 +120,139 @@ const MenuWrapper = styled.ul`
   list-style: none;
   margin: 0;
   padding-left: 0;
-  padding-bottom: 3px;
+  padding-bottom: 3;
 
   border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-bottom-color: #848284;
+  border-width: 1;
+  border-bottom-color: grays.3;
 
-  box-shadow: 0 1px 0 0 #e6e6e6;
+  box-shadow: 0 1px 0 0 ${th('colors.grays.0')};
 `;
 
 const MenuItem = styled.li`
   position: relative;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 6;
+  padding-right: 6;
 
   user-select: none;
 
   ul {
     position: absolute;
     left: 0;
-    color: #000;
+    color: ${th('colors.black')};
   }
 
-  ${({ active }) => active
-    && `
-      background-color: #00007f;
-      color: #FFF;
+  ${({ active }) =>
+    active &&
+    css`
+      background-color: primary;
+      color: ${th('colors.white')};
     `};
 `;
 
 MenuItem.displayName = 'MenuItem';
 
-const Modal = ({
-  closeModal,
-  title,
-  children,
-  buttons,
-  icon,
-  menu,
-  buttonsAlignment,
-  defaultPosition,
-  width,
-  height,
-  ...rest
-}) => {
-  const [menuOpened, setMenuOpened] = useState('');
-
-  const iconStyle = {
-    width: 15,
-    height: 13,
-    style: {
-      marginRight: '4px',
+const Modal = forwardRef(
+  (
+    {
+      closeModal,
+      title,
+      children,
+      buttons,
+      icon,
+      menu,
+      buttonsAlignment,
+      defaultPosition,
+      width,
+      height,
+      ...rest
     },
-  };
+    ref,
+  ) => {
+    const {
+      addWindows,
+      removeWindows,
+      setActiveWindow,
+      activeWindow,
+    } = useContext(ModalContext);
+    const [menuOpened, setMenuOpened] = useState('');
 
-  return (
-    <React.Fragment>
-      <Draggable handle=".draggable" defaultPosition={defaultPosition}>
-        <ModalWrapper width={width} height={height} {...rest}>
-          <TitleBar className="draggable">
-            {icon && <Icon name={icon} {...iconStyle} />}
-            <Title>{title}</Title>
-            <OptionsBox>
-              <Option>?</Option>
-              <Option onClick={closeModal}>x</Option>
-            </OptionsBox>
-          </TitleBar>
+    useEffect(() => {
+      addWindows({ icon, title });
+      setActiveWindow(title);
 
-          {menu.length > 0 && (
-            <MenuWrapper>
-              {menu.map(({ name, list }) => {
-                const active = menuOpened === name;
-                return (
-                  <MenuItem
-                    key={name}
-                    onMouseDown={() => setMenuOpened(name)}
-                    active={active}
-                  >
-                    {name}
-                    {active && list}
-                  </MenuItem>
-                );
-              })}
-            </MenuWrapper>
-          )}
+      return () => removeWindows(title);
+    }, []);
 
-          <Content onClick={() => setMenuOpened('')}>{children}</Content>
-          {buttons.length > 0 && (
-            <ButtonWrapper buttonsAlignment={buttonsAlignment}>
-              {buttons.map((button, index) => (
-                <Button
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={index}
-                  onClick={button.onClick}
-                  value={button.value}
-                />
-              ))}
-            </ButtonWrapper>
-          )}
-        </ModalWrapper>
-      </Draggable>
-    </React.Fragment>
-  );
-};
+    const iconStyle = {
+      width: 15,
+      height: 13,
+      style: {
+        marginRight: '4px',
+      },
+    };
+
+    const isActive = title === activeWindow;
+
+    return (
+      <>
+        <Draggable handle=".draggable" defaultPosition={defaultPosition}>
+          <ModalWrapper
+            width={width}
+            height={height}
+            {...rest}
+            onClick={() => setActiveWindow(title)}
+            active={isActive}
+            ref={ref}
+          >
+            <TitleBar
+              className="draggable"
+              backgroundColor={isActive ? 'primary' : 'grays.3'}
+            >
+              {icon && <Icon name={icon} {...iconStyle} />}
+              <Title>{title}</Title>
+              <OptionsBox>
+                <Option>?</Option>
+                <Option onClick={closeModal}>x</Option>
+              </OptionsBox>
+            </TitleBar>
+
+            {menu.length > 0 && (
+              <MenuWrapper>
+                {menu.map(({ name, list }) => {
+                  const active = menuOpened === name;
+                  return (
+                    <MenuItem
+                      key={name}
+                      onMouseDown={() => setMenuOpened(name)}
+                      active={active}
+                    >
+                      {name}
+                      {active && list}
+                    </MenuItem>
+                  );
+                })}
+              </MenuWrapper>
+            )}
+
+            <Content onClick={() => setMenuOpened('')}>{children}</Content>
+            {buttons.length > 0 && (
+              <ButtonWrapper buttonsAlignment={buttonsAlignment}>
+                {buttons.map(button => (
+                  <Button
+                    key={button.value}
+                    onClick={button.onClick}
+                    value={button.value}
+                  />
+                ))}
+              </ButtonWrapper>
+            )}
+          </ModalWrapper>
+        </Draggable>
+      </>
+    );
+  },
+);
 
 Modal.displayName = 'Modal';
 
@@ -251,8 +296,8 @@ Modal.defaultProps = {
   defaultPosition: { x: 0, y: 0 },
   buttons: [],
   menu: [],
-  width: 300,
-  height: 200,
+  width: undefined,
+  height: undefined,
   closeModal: () => {},
 };
 

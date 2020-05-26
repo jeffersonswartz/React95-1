@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import Modal from '../Modal';
+import styled from '@xstyled/styled-components';
+
+import { Modal } from '../Modal';
 
 import {
   dialogError,
@@ -33,7 +34,7 @@ Dialog.Image = styled.div`
   height: 45px;
   width: 45px;
   background-position: center;
-  margin-right: 10px;
+  margin-right: 10;
 `;
 
 Dialog.Message = styled.div`
@@ -55,7 +56,6 @@ const Alert = ({ type, title, message, onCloseModal, closeAlert, ...rest }) => {
       buttonsAlignment="center"
       buttons={[{ value: 'OK', onClick: closeAlert }]}
       defaultPosition={defaultPosition}
-      width="auto"
       height={120}
       {...rest}
     >

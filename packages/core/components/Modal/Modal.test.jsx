@@ -1,12 +1,13 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { waitRender, fireEvent } from '../shared/test/utils';
 import Modal from './Modal';
+import ModalContext from './ModalContext';
 import List from '../List';
 
 describe('<Modal />', () => {
   describe('Snapshots', () => {
-    it('should match snapshot', () => {
-      const { container } = render(
+    it('should match snapshot', async () => {
+      const { container } = await waitRender(
         <Modal
           icon="bat"
           title="file.bat"
@@ -31,13 +32,13 @@ describe('<Modal />', () => {
           ]}
         >
           Hello
-        </Modal>
+        </Modal>,
       );
       expect(container).toMatchSnapshot();
     });
 
-    it('should match snapshot with buttonsAligment prop equals center', () => {
-      const { container } = render(
+    it('should match snapshot with buttonsAligment prop equals center', async () => {
+      const { container } = await waitRender(
         <Modal
           icon="bat"
           title="file.bat"
@@ -45,13 +46,13 @@ describe('<Modal />', () => {
           buttonsAlignment="center"
         >
           Hello
-        </Modal>
+        </Modal>,
       );
       expect(container).toMatchSnapshot();
     });
 
-    it('should match snapshot with buttonsAligment prop equals flex-start', () => {
-      const { container } = render(
+    it('should match snapshot with buttonsAligment prop equals flex-start', async () => {
+      const { container } = await waitRender(
         <Modal
           icon="bat"
           title="file.bat"
@@ -59,7 +60,35 @@ describe('<Modal />', () => {
           buttonsAlignment="flex-start"
         >
           Hello
-        </Modal>
+        </Modal>,
+      );
+      expect(container).toMatchSnapshot();
+    });
+
+    it('should match snapshot with width and height props', async () => {
+      const { container } = await waitRender(
+        <Modal icon="bat" title="file.bat" width={300} height={200}>
+          Hello
+        </Modal>,
+      );
+      expect(container).toMatchSnapshot();
+    });
+
+    it('should match snapshot with different activeWindow', async () => {
+      const { container } = await waitRender(
+        <ModalContext.Provider
+          value={{
+            windows: [],
+            addWindows: () => {},
+            removeWindows: () => {},
+            setActiveWindow: () => {},
+            activeWindow: '',
+          }}
+        >
+          <Modal icon="bat" title="file.bat" width={300} height={200}>
+            Hello
+          </Modal>
+        </ModalContext.Provider>,
       );
       expect(container).toMatchSnapshot();
     });
@@ -68,10 +97,10 @@ describe('<Modal />', () => {
   describe('closeModal prop', () => {
     it('should call closeModal when Modal close button is clicked', async () => {
       const closeModalMock = jest.fn();
-      const { getByText } = render(
+      const { getByText } = await waitRender(
         <Modal icon="bat" title="file.bat" closeModal={closeModalMock}>
           Hello
-        </Modal>
+        </Modal>,
       );
 
       fireEvent.click(getByText('x'));
@@ -81,21 +110,21 @@ describe('<Modal />', () => {
   });
 
   describe('Modal action buttons', () => {
-    it('should display button text correctly', () => {
+    it('should display button text correctly', async () => {
       const buttonText = 'button text';
-      const { container } = render(
+      const { container } = await waitRender(
         <Modal icon="bat" title="file.bat" buttons={[{ value: buttonText }]}>
           Hello
-        </Modal>
+        </Modal>,
       );
 
       expect(
-        container.querySelector(`button[value='${buttonText}']`).textContent
+        container.querySelector(`button[value='${buttonText}']`).textContent,
       ).toBe(buttonText);
     });
 
-    it('should display more than one button', () => {
-      const { getAllByText } = render(
+    it('should display more than one button', async () => {
+      const { getAllByText } = await waitRender(
         <Modal
           icon="bat"
           title="file.bat"
@@ -106,16 +135,16 @@ describe('<Modal />', () => {
           ]}
         >
           Hello
-        </Modal>
+        </Modal>,
       );
 
       expect(getAllByText('button').length).toBe(3);
     });
 
-    it('should call onClick function when Modal action button is clicked', () => {
+    it('should call onClick function when Modal action button is clicked', async () => {
       const onClickMock = jest.fn();
-      const { getByText } = render(
-        <Modal buttons={[{ value: 'Ok', onClick: onClickMock }]}>Hello</Modal>
+      const { getByText } = await waitRender(
+        <Modal buttons={[{ value: 'Ok', onClick: onClickMock }]}>Hello</Modal>,
       );
 
       fireEvent.click(getByText('Ok'));
@@ -125,8 +154,8 @@ describe('<Modal />', () => {
   });
 
   describe('Menus', () => {
-    it('should display menu name correctly', () => {
-      const { container } = render(
+    it('should display menu name correctly', async () => {
+      const { container } = await waitRender(
         <Modal
           menu={[
             {
@@ -140,14 +169,14 @@ describe('<Modal />', () => {
           ]}
         >
           Hello
-        </Modal>
+        </Modal>,
       );
 
       expect(container.querySelector('li').textContent).toBe('Menu Text');
     });
 
-    it('should display menu list correctly', () => {
-      const { getByText } = render(
+    it('should display menu list correctly', async () => {
+      const { getByText } = await waitRender(
         <Modal
           menu={[
             {
@@ -161,7 +190,7 @@ describe('<Modal />', () => {
           ]}
         >
           Hello
-        </Modal>
+        </Modal>,
       );
 
       fireEvent.mouseDown(getByText('Edit'));

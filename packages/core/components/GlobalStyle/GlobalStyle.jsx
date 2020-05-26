@@ -4,6 +4,10 @@ import woff2 from '../shared/assets/font/MS-Sans-Serif.woff2';
 import woff from '../shared/assets/font/MS-Sans-Serif.woff';
 import ttf from '../shared/assets/font/MS-Sans-Serif.ttf';
 import eot from '../shared/assets/font/MS-Sans-Serif.eot';
+import videowoff2 from '../shared/assets/font/React95Video-Numbers.woff2';
+import videowoff from '../shared/assets/font/React95Video-Numbers.woff';
+import videottf from '../shared/assets/font/React95Video-Numbers.ttf';
+import videoeot from '../shared/assets/font/React95Video-Numbers.eot';
 
 import pattern from '../shared/assets/pattern/dropdown.png';
 import upcaret from '../shared/assets/pattern/upcaret.svg';
@@ -55,13 +59,27 @@ const GlobalStyle = createGlobalStyle`
     font-style: normal;
   }
 
+  @font-face {
+    font-family: 'React95Video-Numbers';
+    src: url('${videoeot}');
+    src: url('${videowoff2}') format('woff2'),
+         url('${videowoff}') format('woff'),
+         url('${videottf}') format('truetype'),
+         url('${videoeot}.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
   body {
     background-color: #5aa;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: 12px;
   }
 
   * {
     font-family: 'MS Sans Serif';
-    font-size: 12px;
     box-sizing: border-box;
   }
 
@@ -129,39 +147,39 @@ const GlobalStyle = createGlobalStyle`
     border-bottom: 2px solid black;
   }
 
-  html, .auto, *   { cursor: url('${auto}'), auto; }
-  .default         { cursor: url('${auto}'), default; }
-  .none            { cursor: none; }
-  .help            { cursor: url('${help}'), help; }
-  .pointer         { cursor: url('${pointer}'), pointer; }
-  .progress        { cursor: url('${progress}'), progress; }
-  .wait            { cursor: url('${wait}'), wait; }
-  .crosshair       { cursor: url('${crosshair}'), crosshair; }
-  .text            { cursor: url('${text}'), text; }
-  .vertical-text   { cursor: url('${verticalText}'), vertical-text; }
-  .alias           { cursor: url('${alias}'), alias; }
-  .copy            { cursor: url('${copy}'), copy; }
-  .move            { cursor: url('${move}'), move; }
-  .no-drop         { cursor: url('${noDrop}'), no-drop; }
-  .not-allowed     { cursor: url('${notAllowed}'), not-allowed; }
-  .grab            { cursor: url('${grab}'), grab; }
-  .grabbing        { cursor: url('${grabbing}'), grabbing; }
-  .col-resize      { cursor: url('${colResize}'), col-resize; }
-  .row-resize      { cursor: url('${rowResize}'), row-resize; }
-  .n-resize        { cursor: url('${nResize}'), n-resize; }
-  .e-resize        { cursor: url('${eResize}'), e-resize; }
-  .s-resize        { cursor: url('${sResize}'), s-resize; }
-  .w-resize        { cursor: url('${wResize}'), w-resize; }
-  .ns-resize       { cursor: url('${nsResize}'), ns-resize; }
-  .ew-resize       { cursor: url('${ewResize}'), ew-resize; }
-  .ne-resize       { cursor: url('${neResize}'), ne-resize; }
-  .nw-resize       { cursor: url('${nwResize}'), nw-resize; }
-  .se-resize       { cursor: url('${seResize}'), se-resize; }
-  .sw-resize       { cursor: url('${swResize}'), sw-resize; }
-  .nesw-resize     { cursor: url('${neswResize}'), nesw-resize; }
-  .nwse-resize     { cursor: url('${nwseResize}'), nwse-resize; }
-  .zoom-in         { cursor: url('${zoomIn}'), zoom-in; }
-  .zoom-out        { cursor: url('${zoomOut}'), zoom-out; }
+  html, .auto, *       { cursor: url('${auto}'), auto; }
+  .default             { cursor: url('${auto}'), default; }
+  .none                { cursor: none; }
+  .help                { cursor: url('${help}'), help; }
+  .pointer, :any-link  { cursor: url('${pointer}'), pointer; }
+  .progress            { cursor: url('${progress}'), progress; }
+  .wait                { cursor: url('${wait}'), wait; }
+  .crosshair           { cursor: url('${crosshair}'), crosshair; }
+  .text                { cursor: url('${text}'), text; }
+  .vertical-text       { cursor: url('${verticalText}'), vertical-text; }
+  .alias               { cursor: url('${alias}'), alias; }
+  .copy                { cursor: url('${copy}'), copy; }
+  .move                { cursor: url('${move}'), move; }
+  .no-drop             { cursor: url('${noDrop}'), no-drop; }
+  .not-allowed         { cursor: url('${notAllowed}'), not-allowed; }
+  .grab                { cursor: url('${grab}'), grab; }
+  .grabbing            { cursor: url('${grabbing}'), grabbing; }
+  .col-resize          { cursor: url('${colResize}'), col-resize; }
+  .row-resize          { cursor: url('${rowResize}'), row-resize; }
+  .n-resize            { cursor: url('${nResize}'), n-resize; }
+  .e-resize            { cursor: url('${eResize}'), e-resize; }
+  .s-resize            { cursor: url('${sResize}'), s-resize; }
+  .w-resize            { cursor: url('${wResize}'), w-resize; }
+  .ns-resize           { cursor: url('${nsResize}'), ns-resize; }
+  .ew-resize           { cursor: url('${ewResize}'), ew-resize; }
+  .ne-resize           { cursor: url('${neResize}'), ne-resize; }
+  .nw-resize           { cursor: url('${nwResize}'), nw-resize; }
+  .se-resize           { cursor: url('${seResize}'), se-resize; }
+  .sw-resize           { cursor: url('${swResize}'), sw-resize; }
+  .nesw-resize         { cursor: url('${neswResize}'), nesw-resize; }
+  .nwse-resize         { cursor: url('${nwseResize}'), nwse-resize; }
+  .zoom-in             { cursor: url('${zoomIn}'), zoom-in; }
+  .zoom-out            { cursor: url('${zoomOut}'), zoom-out; }
 `;
 
 export default GlobalStyle;
